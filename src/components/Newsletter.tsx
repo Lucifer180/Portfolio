@@ -2,7 +2,7 @@
 
 import { newsletter, newsletterForm } from "@/resources";
 import { Button, Heading, Input, Text, Background, Column, Row } from "@once-ui-system/core";
-import { Opacity, SpacingToken } from "@once-ui-system/core";
+import type { Opacity, SpacingToken } from "@once-ui-system/core";
 import { useState } from "react";
 
 // Aveiro's public subscribe endpoint: accepts signups from any site allowed on the embed form.

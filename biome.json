@@ -16,7 +16,36 @@
   },
   "linter": {
     "enabled": true,
-    "rules": { "recommended": true }
+    "rules": {
+      "recommended": true,
+      "style": {
+        "useSelfClosingElements": "warn",
+        "useNodejsImportProtocol": "warn",
+        "noUselessElse": "warn",
+        "useTemplate": "warn",
+        "noUnusedTemplateLiteral": "warn",
+        "noParameterAssign": "warn"
+      },
+      "complexity": {
+        "noUselessFragments": "warn",
+        "useOptionalChain": "warn"
+      },
+      "correctness": {
+        "useJsxKeyInIterable": "warn",
+        "useExhaustiveDependencies": "warn"
+      },
+      "suspicious": {
+        "noExplicitAny": "warn",
+        "noArrayIndexKey": "warn",
+        "noDoubleEquals": "warn"
+      },
+      "a11y": {
+        "useSemanticElements": "warn"
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "warn"
+      }
+    }
   },
   "javascript": {
     "formatter": {

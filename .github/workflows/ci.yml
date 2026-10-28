@@ -1,4 +1,4 @@
-# Typecheck, Biome and a production build on every pull request. Vercel only
+# Lint, typecheck and a production build on every pull request. Vercel only
 # builds main and preview, so this is the check a PR has before it merges.
 name: CI
 
@@ -26,5 +26,6 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci --no-audit --no-fund
+      - run: npm run lint
       - run: npx tsc --noEmit
       - run: npx next build

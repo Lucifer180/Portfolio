@@ -10,9 +10,9 @@ import {
   Column,
   Flex,
   Meta,
-  Opacity,
+  type Opacity,
   RevealFx,
-  SpacingToken,
+  type SpacingToken,
 } from "@once-ui-system/core";
 import { Footer, Header, RouteGuard, Providers } from "@/components";
 import { baseURL, effects, fonts, style, dataStyle, home, person } from "@/resources";

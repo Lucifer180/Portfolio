@@ -1,5 +1,6 @@
-import { MDXRemote, MDXRemoteProps } from "next-mdx-remote/rsc";
-import React, { ReactNode } from "react";
+import { MDXRemote, type MDXRemoteProps } from "next-mdx-remote/rsc";
+import type React from "react";
+import type { ReactNode } from "react";
 import { slugify as transliterate } from "transliteration";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
@@ -9,8 +10,8 @@ import {
   HeadingLink,
   Text,
   InlineCode,
-  TextProps,
-  MediaProps,
+  type TextProps,
+  type MediaProps,
   Accordion,
   AccordionGroup,
   Table,
