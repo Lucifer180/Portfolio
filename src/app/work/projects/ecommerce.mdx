@@ -1,0 +1,50 @@
+---
+title: "Aurora: price-comparison store with checkout"
+publishedAt: "2026-10-31"
+summary: "A full-stack store: search one product across Amazon, Flipkart and Myntra, get AI \"complete the look\" ideas, and pay with Razorpay. Express 5 API with MongoDB transactions, Redis and BullMQ, plus a React 19 frontend."
+images:
+  - "/images/projects/ecommerce/landing.jpg"
+  - "/images/projects/ecommerce/search.jpg"
+  - "/images/projects/ecommerce/admin-products.jpg"
+  - "/images/projects/ecommerce/architecture.jpg"
+link: "https://github.com/Lucifer180/Ecommerce-node-js"
+---
+
+## Overview
+
+Aurora lets a shopper search once and compare the same product's price across three Indian stores, then check out with Razorpay. Admins manage products, users and email notifications.
+
+It is two repositories:
+
+- **Backend:** [Ecommerce-node-js](https://github.com/Lucifer180/Ecommerce-node-js) (56 commits). Express 5, MongoDB, Redis, BullMQ, Razorpay, AWS S3, Groq, Jest and Docker. Deployed on Oracle Cloud with pm2.
+- **Frontend:** [Ecommerce-frontend](https://github.com/Lucifer180/Ecommerce-frontend) (15 commits). React 19, TypeScript, Vite, TanStack Query, React Router 7, react-hook-form with zod, and Tailwind CSS 4.
+
+Price comparison runs through my [Crawler Service](/work/crawler-service).
+
+> The screenshots use made-up products and images. The real search shows live store listings.
+
+![Search results](/images/projects/ecommerce/search.jpg)
+
+## The hard parts
+
+- **Checkout can't oversell.** Stock is decremented with a guarded atomic update inside one MongoDB transaction. If stock runs out, the shopper gets a `409` and nothing is half-written.
+- **The client is never trusted about money.** The payment amount always comes from the stored order. The browser callback and Razorpay's signed webhook both lead to one idempotent `pending → paid` step, and a failed payment returns the stock.
+- **Uploads skip the API.** The client gets a 60-second presigned S3 URL with type and size locked into the signature, and the upload is confirmed against the real file metadata.
+- **Email runs in the background.** Password resets and admin notifications are queued with BullMQ and sent by a separate worker, one job per recipient, so one bounce doesn't fail the others.
+- **AI suggestions with limits.** Groq suggests items that go with a product. Results are cached for 24 hours and rate-limited.
+
+![Architecture](/images/projects/ecommerce/architecture.jpg)
+
+## Frontend highlights
+
+- **Silent token refresh:** an expired access token is refreshed once and the request retried. Parallel `401`s share a single refresh.
+- **Feature folders:** each feature has its own `api`, `hooks`, `components`, `pages` and `schemas`.
+- **Route guards** for guest-only, signed-in and admin pages, and an admin area for products, users and notifications.
+
+![Admin products](/images/projects/ecommerce/admin-products.jpg)
+
+## Quality and delivery
+
+- 32 Jest tests across auth, checkout, payments and roles.
+- Security middleware: helmet, a CORS allow-list, rate limiting, Mongo sanitising, XSS cleaning and HPP.
+- CI on every push. Deploys only run after a green build, check `/health`, and roll back to the previous commit if the check fails.

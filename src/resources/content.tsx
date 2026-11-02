@@ -51,17 +51,18 @@ const home: Home = {
   description: `Portfolio website showcasing my work as a ${person.role}`,
   headline: <>Building interfaces that hold up in production</>,
   featured: {
-    display: false,
-    title: <></>,
-    href: "",
+    display: true,
+    title: <>Case study: an RMA portal for shelf label returns</>,
+    href: "/work/rma-portal",
   },
   subline: (
     <>
       I'm {person.firstName}, a {person.role.toLowerCase()} at{" "}
       <Text as="span" size="xl" weight="strong">
-        ONCE UI
+        DIATOZ Solutions
       </Text>
-      , where I craft intuitive <br /> user experiences. After hours, I build my own projects.
+      , where I build enterprise <br /> web platforms. After hours, I build my own full-stack
+      projects.
     </>
   ),
 };
@@ -87,10 +88,11 @@ const about: About = {
     title: "Introduction",
     description: (
       <>
-        {person.firstName} is a {person.location.split("/")[1]?.replace("_", " ")}-based{" "}
-        {person.role.toLowerCase()} with a passion for transforming complex challenges into simple,
-        elegant design solutions. Their work spans digital interfaces, interactive experiences, and
-        the convergence of design and technology.
+        {person.firstName} is an India-based {person.role.toLowerCase()} who builds React and
+        TypeScript frontends and Node.js backends. At work that means large, role-based enterprise
+        portals with shared component libraries and full translation. On my own projects I go deep
+        on the hard parts: payments that can't double-charge, checkouts that can't oversell, and
+        authentication done properly.
       </>
     ),
   },
@@ -133,7 +135,18 @@ const about: About = {
           </>,
         ],
         images: [
-          // optional: leave the array empty if you don't want to display images
+          {
+            src: "/images/projects/rma-portal/dashboard.jpg",
+            alt: "Illustrative mockup of the RMA portal dashboard",
+            width: 16,
+            height: 9,
+          },
+          {
+            src: "/images/projects/container-yard/reports.jpg",
+            alt: "Illustrative mockup of the container yard reports",
+            width: 16,
+            height: 9,
+          },
         ],
       },
       {
@@ -187,25 +200,30 @@ const about: About = {
     title: "Technical skills",
     skills: [
       {
-        title: "Figma",
-        description: <>Able to prototype in Figma with Once UI with unnatural speed.</>,
+        title: "React",
+        description: (
+          <>
+            Build large React apps: shared component libraries, role-based portals, data-heavy
+            report tables, translation, and server state with Redux Toolkit or TanStack Query.
+          </>
+        ),
         tags: [
           {
-            name: "Figma",
-            icon: "figma",
+            name: "React",
+            icon: "react",
           },
         ],
         // optional: leave the array empty if you don't want to display images
         images: [
           {
-            src: "/images/projects/project-01/cover-02.jpg",
-            alt: "Project image",
+            src: "/images/projects/ecommerce/search.jpg",
+            alt: "Aurora price comparison search",
             width: 16,
             height: 9,
           },
           {
-            src: "/images/projects/project-01/cover-03.jpg",
-            alt: "Project image",
+            src: "/images/projects/authenticate/jwt-flows.jpg",
+            alt: "Authenticate JWT flow diagram",
             width: 16,
             height: 9,
           },
@@ -213,7 +231,12 @@ const about: About = {
       },
       {
         title: "Next.js",
-        description: <>Building next gen apps with Next.js + Once UI + Supabase.</>,
+        description: (
+          <>
+            Fix and speed up production Next.js apps with memoization and lazy loading, and build
+            sites like this portfolio.
+          </>
+        ),
         tags: [
           {
             name: "JavaScript",
@@ -222,10 +245,6 @@ const about: About = {
           {
             name: "Next.js",
             icon: "nextjs",
-          },
-          {
-            name: "JavaScript",
-            icon: "javascript",
           },
         ],
         // optional: leave the array empty if you don't want to display images

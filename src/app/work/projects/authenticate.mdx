@@ -1,0 +1,36 @@
+---
+title: "Authenticate: four ways to log in, built and explained"
+publishedAt: "2026-10-29"
+summary: "One Express and MongoDB backend with four real login methods (sessions, JWT, API keys and Google OAuth), and a React app that explains each with interactive flow diagrams and a live example against the real API."
+images:
+  - "/images/projects/authenticate/home.jpg"
+  - "/images/projects/authenticate/jwt-flows.jpg"
+  - "/images/projects/authenticate/jwt-example.jpg"
+  - "/images/projects/authenticate/jwt-architecture.jpg"
+link: "https://lucifer180.github.io/Authenticate/"
+---
+
+## Overview
+
+A hands-on reference for web authentication. Each method has three parts: the **architecture** (which layer does what), the **flows** as step-by-step diagrams tied to the real backend code, and a **live example** that calls the deployed API and shows every request and response.
+
+- **Live site:** [lucifer180.github.io/Authenticate](https://lucifer180.github.io/Authenticate/)
+- **Code:** [github.com/Lucifer180/Authenticate](https://github.com/Lucifer180/Authenticate)
+- **Stack:** Express 5, MongoDB with Mongoose, React 19, Vite, React Flow with dagre. The frontend is on GitHub Pages and the API on Render.
+
+![Flow diagram](/images/projects/authenticate/jwt-flows.jpg)
+
+## The four methods
+
+- **Session cookies:** sessions stored in MongoDB, a new session ID on login to prevent session fixation, and every old session logged out after a password reset.
+- **JWT:** a 15-minute access token, plus a 7-day refresh token in an httpOnly cookie that is **rotated** on every refresh. Only refresh-token hashes are stored.
+- **API keys:** shown once, stored only as a SHA-256 hash, with permissions, expiry, revoke and rotate.
+- **Google OAuth 2.0 / OpenID Connect:** the authorization-code flow with a `state` check against CSRF. It finishes in two ways for comparison: a server session, or the app's own signed JWT passed in the URL fragment.
+
+## Also included
+
+- Role, permission and ownership checks (`requiredRole`, `requirePermission`, `requireOwnership`).
+- Forgot and reset password by email, with a hashed, 15-minute, single-use token.
+- Cross-site cookies done right: `Secure; SameSite=None`, a strict CORS allow-list and `trust proxy` behind Render.
+
+![Live example](/images/projects/authenticate/jwt-example.jpg)

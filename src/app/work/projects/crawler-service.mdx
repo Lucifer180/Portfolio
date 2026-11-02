@@ -1,0 +1,42 @@
+---
+title: "Crawler Service: one search across three stores"
+publishedAt: "2026-10-30"
+summary: "A TypeScript microservice that searches Amazon, Flipkart and Myntra in parallel with headless Chromium, matches the same product across stores and returns offers sorted by price. Runs on Google Cloud Run."
+images:
+  - "/images/projects/crawler-service/architecture.jpg"
+  - "/images/projects/crawler-service/matching.jpg"
+link: "https://github.com/Lucifer180/Crawler-service"
+---
+
+## Overview
+
+Crawler Service powers the price comparison in [Aurora](/work/ecommerce). One request fans out to Amazon, Flipkart and Myntra in parallel, normalises the listings, works out which listings are the same product, and returns grouped offers, cheapest first.
+
+**Stack:** TypeScript, Node 22, Express, Playwright (headless Chromium), zod, p-queue, Vitest, Docker and Google Cloud Run.
+
+![How a search works](/images/projects/crawler-service/architecture.jpg)
+
+## How a search works
+
+1. **Fan out:** every store crawler runs at the same time, each retried once.
+2. **Isolate failures:** a store that fails or blocks the crawler is reported as `failed`, and the other stores still return results.
+3. **Merge:** listings are normalised and sorted by price.
+4. **Group:** listings for the same product are grouped, with one offer per store.
+5. **Respond** with the groups and a per-store report (status, count and time taken).
+
+## Matching the same product across stores
+
+Stores name the same product very differently. A match needs brand, model, variant words (Pro, Max, FE…) and storage to agree, and doubtful pairs are kept apart. A shopper should never see a "lowest price" that belongs to a different product.
+
+![Cross-store matching](/images/projects/crawler-service/matching.jpg)
+
+## Reliability and safety
+
+- **API keys** compared in constant time. In production, an empty key list rejects every request instead of leaving the service open.
+- **Rate limiting:** 30 requests per minute per key.
+- **Load shedding:** a cap on browser sessions and on the waiting queue. Past that, callers get `503` instead of waiting forever.
+- **No open proxy:** the details endpoint only accepts URLs on each store's own domains.
+- **Health checks:** readiness fails when Chromium disconnects, so traffic only goes to working instances.
+- **Canary script:** searches each live store and fails if too few results come back or too many are missing prices, so HTML changes are caught early.
+
+21 Vitest tests, and every push is tested and deployed to Cloud Run by GitHub Actions.

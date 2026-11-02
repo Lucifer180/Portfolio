@@ -1,0 +1,88 @@
+---
+title: "Case study: An RMA portal for electronic shelf label returns"
+publishedAt: "2026-11-02"
+summary: "15 months as one of the two main frontend engineers on a returns and store operations portal: 6 modules, two role-based portals on one shared layer, 10+ report types and full English, French and German support."
+images:
+  - "/images/projects/rma-portal/dashboard.jpg"
+  - "/images/projects/rma-portal/reports.jpg"
+  - "/images/projects/rma-portal/architecture.jpg"
+---
+
+> **Note:** this is client work done at DIATOZ Solutions. The client is not named, and every image on this page is an illustrative mockup with made-up data. None of them is a screenshot of the real product.
+
+## At a glance
+
+- **Role:** frontend engineer, one of the top two contributors by commit count
+- **Duration:** July 2025 to October 2026 (about 15 months)
+- **Stack:** React 18, TypeScript, MUI 5, Redux Toolkit, React Router 6, react-intl, Recharts and Chart.js, Axios, Webpack, a Lerna and pnpm monorepo, Docker and Nginx
+- **Work:** 386 commits, +110,208 / −60,545 lines across 3,485 file changes
+
+About 60,000 of those lines were deletions. Much of the work was refactoring and consolidation, not only new features.
+
+## The problem
+
+The client handles returns (RMA) and replenishment for electronic shelf labels (ESL) in retail stores across several European countries. Before the portal, this meant:
+
+- tracking return tickets by hand through inspection and warranty stages,
+- creating stores and requesting stock one at a time,
+- building reports for regional and enterprise customers by hand, including a retailer-specific "closing file".
+
+Two groups needed the same data with different permissions. **Admins** are the service provider's staff. **Customers** are retail chains and their store managers.
+
+## What I built
+
+### 1. Store requests and onboarding (Jul to Sep 2025)
+
+- A **store request** list with search, filters and pagination. Filters only call the API when their values actually change.
+- A **multi-step store creation drawer** (basic details, then product details) with validation, due dates and a flow to resubmit rejected requests.
+- **Bulk upload** from CSV and Excel, with downloadable templates for each user.
+- Store managers are matched by **email instead of internal user ID**, which fixed assignment problems between systems.
+
+### 2. Regions, countries and dashboards (Sep to Nov 2025)
+
+- Region and country management with bulk CSV upload and clear per-row errors.
+- **Customer and Admin dashboards** with ticket distribution charts, status breakdowns, time filters and sorting.
+- **Access control:** replaced a top-nav check with a `PrivateRoute` pattern and built a role-based side navigation.
+- Added i18n to the dashboard, which started the move to full English, French and German support.
+
+![Dashboard mockup](/images/projects/rma-portal/dashboard.jpg)
+
+### 3. Reporting engine (Oct 2025 to Jan 2026)
+
+- A reusable **ReportsTable** replaced many one-off tables. It supports dynamic columns, row spanning, sorting and pagination.
+- A **ReportProvider** plus filter providers give every report the same filter system.
+- Reports delivered: ESL, Inspected ESL, Processing Rate, MAC ID Tracking, Region Summary, Monthly, Yearly and the retailer-specific Closing File.
+
+![Reports mockup](/images/projects/rma-portal/reports.jpg)
+
+### 4. Performance and refactoring (Dec 2025 to Jan 2026)
+
+- An optimization pass with `React.memo` and lazy loading for the report components.
+- Removed unused components and styles, and fixed effect dependency arrays to cut needless re-renders.
+
+### 5. Replenishment orders and SLA (Jan to May 2026)
+
+- A **replenishment order** module for both portals: order list, filters, order summary with PDF view, a status timeline and order confirmation.
+- **ESL master data** management with batch uploads, customer user management and SLA improvements.
+
+### 6. Ticket lifecycle and notifications (Jun to Oct 2026)
+
+- Email notification settings and admin announcements.
+- A reusable **TicketDetails** card for creating RMA requests, ticket edit and delete rules, ticket reopening and the admin inspection workflow.
+- Monthly report and closing-file components with full translation.
+
+## Engineering decisions
+
+![Architecture diagram](/images/projects/rma-portal/architecture.jpg)
+
+- **One provider per domain.** Reports, store requests, customers, regions, countries, replenishment orders and master data each have their own provider. API logic stays out of the UI, and the Admin and Customer portals share one data layer.
+- **Build once, use in both portals.** The tables, ticket cards and form inputs are written once and used everywhere.
+- **Translation from the start.** About 350 commits touched the English, German and French text files, which made the product usable for European customers.
+- **Fix the cause, not the symptom.** For example: debouncing product updates, matching users by email, and only fetching when filters really change.
+
+## Results
+
+- Delivered **6 major modules** end to end: store requests, regions and countries, dashboards, reports, replenishment orders and tickets.
+- **Two role-based portals** run on one shared component and data layer.
+- **10+ report types** run on one reusable table and filter engine.
+- The product is fully available in **3 languages**.

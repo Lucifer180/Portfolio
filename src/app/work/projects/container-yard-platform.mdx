@@ -1,0 +1,71 @@
+---
+title: "Case study: Reports and gate-out fixes for a container yard platform"
+publishedAt: "2026-11-01"
+summary: "Joined in the last week before user testing to build Excel reports for customers and shipping lines, and to fix two data bugs: duplicate request numbers and one container assigned to two trucks."
+images:
+  - "/images/projects/container-yard/yard-view.jpg"
+  - "/images/projects/container-yard/reports.jpg"
+  - "/images/projects/container-yard/gate-out.jpg"
+  - "/images/projects/container-yard/sequence-fix.jpg"
+---
+
+> **Note:** this is client work. The client and product are not named, and every image on this page is an illustrative mockup or diagram with made-up data. None of them is a screenshot of the real product.
+
+## At a glance
+
+- **Role:** full-stack contributor. I joined in the final week before user acceptance testing (UAT) to deliver reports and harden the gate-out flow. The lead developer built most of the system.
+- **Duration:** 22 to 28 October 2026
+- **Stack:** React 18, Vite, Tailwind CSS and Three.js on the frontend; Node.js, Express and SQLite, with SQL Server as the production database; server tests; GitLab CI
+- **Work:** 11 commits, +1,218 / −382 lines across 86 file changes
+
+## What the platform does
+
+It runs a shipping-container yard for a terminal operator in Saudi Arabia: gate-in and gate-out, where each container sits (zone, bay, row and tier), customs clearance through Bayan, monitoring of refrigerated (reefer) containers, billing, and reports for customers and shipping lines.
+
+![Yard view mockup](/images/projects/container-yard/yard-view.jpg)
+
+## 1. Customer and shipping-line reports
+
+**Problem:** customers and shipping lines needed the operational reports from the client's spec as Excel downloads. The existing reports endpoint only returned one basic KPI.
+
+**What I built:**
+
+- **A report registry.** Each report declares its title, data source, filter, columns (with Excel widths) and how to map each row. Delivered: Damage Container Report (with checker, dispatcher and yard coordinator sign-off), Container Damage Report, Daily Reefer Monitoring (set point vs. actual temperature, per shift) and Yard Empty Containers (with release numbers).
+- **Three shared query bases** (gate-in stays, gate-out departures and reefer readings), each joining about 10 tables. A new report only adds a filter, not new SQL.
+- **Yard-local time.** All dates, times and shifts use the yard's time zone, so a report's "day" matches what staff see on site.
+- **No guessed data.** Fields the yard doesn't record yet come back empty instead of being filled in.
+- **Security.** The reports router had no auth check, so I added login and permission checks.
+- **A correctness fix.** The occupancy figure read from a table that was no longer kept up to date. I switched it to real TEU usage, so the Reports page and the Dashboard now show the same number.
+- About 150 lines of tests for the reports.
+
+![Reports mockup](/images/projects/container-yard/reports.jpg)
+
+## 2. One container, one truck
+
+The gate-out flow decides which container goes on which truck, so a bug here means a box leaves on the wrong truck.
+
+- **The bug:** two dispatchers could assign the same container to different trucks if the container had two open visits.
+- **The fix:** a check by container number across all open trucks, with a clear message showing the other dispatcher's request number. It applies to all three ways a truck gets containers: nominated, manifest plan and first-in-first-out pool.
+- **Customs check per customer.** The import clearance block now applies only to customers who require Bayan at gate-out, instead of blocking every laden import.
+
+![Gate-out diagram](/images/projects/container-yard/gate-out.jpg)
+
+## 3. A race condition in request numbering
+
+- **Symptom:** parallel CI runs failed with a unique-constraint error on request numbers. Two processes were getting the same number.
+- **Root cause:** the sequence read the current value and then wrote it back, so two processes could read the same value before either wrote.
+- **Fix:** increment first, then read, inside one transaction. The update holds the write lock until the number is taken. It also handles two processes creating the same sequence at once and joins an outer transaction when one is open. The function signature didn't change, so no caller had to change.
+
+![Sequence fix diagram](/images/projects/container-yard/sequence-fix.jpg)
+
+## 4. Smaller improvements
+
+- 3D yard view (Three.js): container tooltips now show days in yard, gate-in time and the gate-in request number.
+- SQL Server migration: extended the SQLite to T-SQL schema converter and its test suite.
+- Fixes on the gate-in list, the gate-out queue and the customer onboarding pages.
+
+## Results
+
+- A report module customers and shipping lines can download as Excel, with tests, built in about a week.
+- **Two production-level data bugs fixed before UAT:** duplicate request numbers and double-assigned containers.
+- The occupancy figure now matches between Reports and the Dashboard.
