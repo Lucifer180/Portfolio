@@ -21,6 +21,8 @@ export type Person = {
   role: string;
   /** Path to avatar image */
   avatar: string;
+  /** Optional extra photos the large avatars rotate through, starting with `avatar` */
+  avatars?: string[];
   /** Email address */
   email: string;
   /** IANA time zone location */

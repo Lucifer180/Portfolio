@@ -2,7 +2,6 @@ import {
   Heading,
   Text,
   Button,
-  Avatar,
   RevealFx,
   Column,
   Badge,
@@ -12,7 +11,7 @@ import {
   Line,
 } from "@once-ui-system/core";
 import { home, about, person, baseURL, routes } from "@/resources";
-import { Newsletter } from "@/components";
+import { Newsletter, RotatingAvatar } from "@/components";
 import { Projects } from "@/components/work/Projects";
 import { Posts } from "@/components/blog/Posts";
 
@@ -87,12 +86,10 @@ export default function Home() {
             >
               <Row gap="8" vertical="center" paddingRight="4">
                 {about.avatar.display && (
-                  <Avatar
-                    marginRight="8"
-                    style={{ marginLeft: "-0.75rem" }}
-                    src={person.avatar}
+                  <RotatingAvatar
+                    images={person.avatars ?? [person.avatar]}
                     size="m"
-                    aria-hidden
+                    style={{ marginLeft: "-0.75rem", marginRight: "0.5rem" }}
                   />
                 )}
                 {about.title}

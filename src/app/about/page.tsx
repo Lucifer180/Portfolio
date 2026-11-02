@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Button,
   Column,
   Heading,
@@ -14,6 +13,7 @@ import {
 } from "@once-ui-system/core";
 import { baseURL, about, person, social } from "@/resources";
 import TableOfContents from "@/components/about/TableOfContents";
+import { RotatingAvatar } from "@/components";
 import styles from "@/components/about/about.module.scss";
 import React from "react";
 
@@ -93,7 +93,11 @@ export default function About() {
             flex={3}
             horizontal="center"
           >
-            <Avatar src={person.avatar} size="xl" aria-label={person.name} />
+            <RotatingAvatar
+              images={person.avatars ?? [person.avatar]}
+              size="xl"
+              label={person.name}
+            />
             <Row gap="8" vertical="center">
               <Icon onBackground="accent-weak" name="globe" />
               {person.location}
