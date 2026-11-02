@@ -1,0 +1,34 @@
+---
+title: "Fix the cause, not the symptom"
+subtitle: "The one habit that has changed how I write software"
+summary: "Most bugs I've fixed this year weren't where they showed up. Here's the habit I try to keep: find out why something broke before deciding how to fix it."
+publishedAt: "2026-11-02"
+tag: "Mindset"
+---
+
+When something breaks, the fastest fix is usually in the place where the error shows up. Catch the exception, add a null check, retry the request. It works, the ticket closes, and the real problem is still there, waiting to break something else.
+
+The habit I'm trying to build is simple to say and harder to keep: **before fixing a bug, find out why it happened.** Here are a few times that habit paid off.
+
+## Duplicate numbers that weren't random
+
+On a client project, our CI runs started failing now and then with a "unique constraint failed" error on request numbers. The quick fix would have been to retry the insert.
+
+The real cause: our sequence code read the current value and then wrote back the next one. When two processes ran at the same moment, both read the same value and both handed out the same number. The fix was to increment first and read afterwards, inside one transaction, so the database lock does the work. A retry would have hidden the error and still allowed duplicates in production.
+
+## One container, two trucks
+
+On the same project, two dispatchers could assign the same container to two different trucks. The UI looked fine and each screen showed correct data. The problem was that the check only looked at one visit of the container, not at every open truck. Once I understood that, the fix was one check in the right place, applied to all three ways a truck gets its containers.
+
+## Users who wouldn't get assigned
+
+In our returns portal, store managers sometimes didn't show up as assigned to their stores. It looked like a UI bug. It turned out that two systems used different internal IDs for the same person. Matching people by email, which both systems shared, fixed it for good, instead of patching each screen.
+
+## What I've learned
+
+- **The error message tells you where it hurts, not where it's broken.** I now read one level deeper before writing any fix.
+- **Deleting code is progress.** On the returns portal I removed about as many lines as I added in some months. Every one-off table I replaced with a shared one was a bug that could no longer happen twice.
+- **A good fix often changes nothing for the caller.** My favourite fixes kept the same function signature, so the rest of the code didn't need to know anything changed.
+- **Write down the story.** Symptom, root cause, fix. It helps the next person, and it's the best interview answer I have.
+
+I don't always manage this. Under deadline pressure the quick patch is tempting. But every time I've taken the extra hour to understand a bug, I've saved more than an hour later.

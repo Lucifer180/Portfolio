@@ -1,0 +1,53 @@
+---
+title: "My full-stack journey so far"
+subtitle: "From a Next.js internship to enterprise portals and my own backends"
+summary: "What I've learned in under two years: an internship fixing production bugs, 15 months on a large React portal, and the side projects I built to understand the backend properly."
+publishedAt: "2026-10-30"
+tag: "Journey"
+image: "/images/projects/ecommerce/architecture.jpg"
+---
+
+I finished my BCA in 2025. Since then I've worked on production code every day, first as an intern and then as a developer. This is a look back at what each stage taught me.
+
+## The internship: real users change everything
+
+My first real job was a Next.js internship at HashCovet. The work wasn't glamorous: fixing UI and API bugs in a live app, speeding up slow pages with memoization and lazy loading, and turning old class-based components into hooks.
+
+What I learned there had less to do with Next.js and more to do with working on something real:
+
+- A bug in production matters more than a feature on my laptop.
+- Reading other people's code is most of the job.
+- Small performance changes add up when many people use a page.
+
+## The first big codebase
+
+At DIATOZ Solutions I've spent about 15 months as one of the two main frontend engineers on a returns and store operations portal. It's a large React and TypeScript app with two portals (admin and customer), more than ten report types, and three languages.
+
+This is where I learned to think in **systems instead of screens**:
+
+- If two portals need the same table, build the table once.
+- Give each domain its own data provider so the UI stays simple.
+- Add translation from the start. Adding it later is much harder.
+- Refactoring is part of the job, not a break from it.
+
+I also learned how much of engineering is communication: understanding what the client actually needs, writing clear commit messages, and being honest about what's done.
+
+## Joining late and being useful
+
+On another client project, I joined in the last week before user testing. Most of the system was already built. My job was to deliver reports and fix gate-out bugs.
+
+Coming in late taught me to **find where I can help most, fast**. I didn't try to understand everything. I read the code around my task, found two real data bugs, fixed their causes, and added tests. Being clear about my role, a week of focused work rather than building the whole thing, also matters when I talk about it now.
+
+## Side projects: going deep on the backend
+
+At work I'm mostly on the frontend, so I use side projects to go deep on the backend:
+
+- [Aurora](/work/ecommerce), a store where I made checkout unable to oversell and payments impossible to double-charge.
+- [Crawler Service](/work/crawler-service), where I learned how to keep a service stable when the sites it depends on are slow or down.
+- [Authenticate](/work/authenticate), where I built sessions, JWT, API keys and Google OAuth myself so I would actually understand them.
+
+These projects taught me that "full stack" isn't about knowing many tools. It's about understanding what happens to a request from the button click to the database and back, and where it can go wrong.
+
+## What's next
+
+I want to keep growing as an engineer who can own a feature end to end: design the API, build the UI, think about failure cases, and ship it. I'm still early in this journey, and writing these notes is part of how I keep learning.

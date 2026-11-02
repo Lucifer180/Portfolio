@@ -1,0 +1,39 @@
+---
+title: "Build it to understand it"
+subtitle: "Why I learn tech by building the hard part myself"
+summary: "Tutorials made me feel like I understood authentication. Building four login methods from scratch showed me I didn't. Here's how I approach learning now."
+publishedAt: "2026-10-25"
+tag: "Mindset"
+image: "/images/projects/authenticate/jwt-flows.jpg"
+---
+
+For a long time I learned by watching tutorials. I'd follow along, the code would work, and I'd feel like I understood the topic. Then I'd try to use it on my own and get stuck on the first thing the tutorial didn't cover.
+
+So I changed how I learn: **pick the part that feels like magic, and build it myself.**
+
+## Authentication was my wake-up call
+
+I had used JWT in projects before. I thought I understood it. Then I built [Authenticate](/work/authenticate), a project with four login methods (sessions, JWT, API keys and Google OAuth) all working against one real backend.
+
+Building it raised questions no tutorial had answered:
+
+- How do you log someone out if their access token is still valid? (You can't, so you keep it short-lived and rotate the refresh token.)
+- Why does a session ID need to change when you log in? (Session fixation.)
+- Why store only a hash of an API key? (So a database leak doesn't hand out working keys.)
+
+I then made the project explain each flow step by step, because explaining something is the real test of understanding it.
+
+## The same idea, everywhere
+
+- **Payments:** in [Aurora](/work/ecommerce), I didn't just call Razorpay. I worked out what happens when the browser callback and the webhook both arrive, or when a payment fails after stock was reserved.
+- **Concurrency:** I learned about race conditions by making checkout unable to oversell, and later found the same pattern in a real bug at work.
+- **Scraping at scale:** [Crawler Service](/work/crawler-service) taught me rate limits, queues and health checks because the service kept falling over until I added them.
+
+## How I approach a new topic now
+
+1. **Build the smallest real version.** Not a demo, but something that has to work against a real database or API.
+2. **Break it on purpose.** Send bad input, run two requests at once, take a dependency offline.
+3. **Explain it.** Write a README, a diagram or a post like this one. Gaps in my understanding show up fast.
+4. **Bring it back to work.** The best moment is spotting the same problem in a real codebase and already knowing why it happens.
+
+Tutorials are still useful for getting started. But the confidence I have now in backend work came from building things that could break, and then understanding why they did.
