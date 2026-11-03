@@ -1,0 +1,77 @@
+---
+title: "Case study: A legal practice platform for law firms and their clients"
+publishedAt: "2026-11-01"
+summary: "Part of the team building a multi-tenant platform where law firms manage matters, clients, workflows and documents, and clients track their cases. I built firm-admin screens, a drag-and-drop dashboard and design-system components on the React frontend."
+images:
+  - "/images/projects/legal-platform/dashboard.jpg"
+  - "/images/projects/legal-platform/matter-workflow.jpg"
+  - "/images/projects/legal-platform/architecture.jpg"
+  - "/images/projects/legal-platform/login-flows.jpg"
+---
+
+> **Note:** this is team work done at DIATOZ Solutions. The product isn't named, and every image on this page is an illustrative mockup or diagram with made-up data. None of them is a screenshot of the real product.
+
+## At a glance
+
+- **My role:** frontend developer on a team of about ten. My commits are in the React app (30 commits, July 2026). On the backend, I worked with the API team as a consumer of its endpoints, building and testing the screens on top of them.
+- **Frontend:** React 19, TypeScript, Vite, Redux Toolkit, React Router 7, Tailwind CSS, Socket.IO client, Vitest, Docker and Nginx
+- **Backend:** Node.js, Express, TypeScript, PostgreSQL with Prisma, Redis and BullMQ, Socket.IO, Azure Blob Storage, Jest
+- **Scale of the codebase:** about 790 frontend commits and 520 backend commits across the team, 89 database models and 128 backend test files
+
+## The problem
+
+Without one shared system, a firm's matters, deadlines and documents end up spread across tools, and clients have to call the firm to ask what's happening with their case or which document is still needed.
+
+The platform brings this into one place for Indian law firms, with three portals:
+
+- **Platform admins** onboard firms and define workflow templates for each type of matter.
+- **Firm users** (admins and employees) manage matters, clients, tasks, hearings, documents, reports and billing. A person can belong to several firms and picks one after login.
+- **Clients** log in with their phone number, follow their matters stage by stage, upload requested documents and see upcoming hearings.
+
+## What I built on the frontend
+
+### A customizable dashboard
+
+The firm dashboard is a grid of widgets users can rearrange by dragging. I worked on the dashboard shell and its widget management.
+
+- On mobile, the grid library has its own touch handling that ignores the normal "draggable" setting, so dragging kept triggering while users tried to scroll. **I traced it to the library's internal touch sensor** and fixed it by marking every widget as static on mobile, so the dashboard scrolls normally and stays arranged.
+- I tried long-press to drag on mobile first, then removed it when it clashed with scrolling. The simpler behaviour worked better.
+
+![Dashboard mockup](/images/projects/legal-platform/dashboard.jpg)
+
+### Firm-admin screens that work on phones
+
+Firm users need the app on their phones too, not only at a desk. I made the firm-admin modules responsive: the matter list and matter view, clients, documents and document requests, tasks, workflow templates, calendar, employees and reports.
+
+- Filters move into a mobile filter drawer instead of a row of dropdowns.
+- Headers and action buttons rearrange for small screens.
+- Tables keep working with the pagination bar and rows-per-page controls.
+
+![Matter workflow mockup](/images/projects/legal-platform/matter-workflow.jpg)
+
+### Login screens and design-system components
+
+- **OTP and email login screens** with a shared OTP input and authentication card layout.
+- **Design-system components** shared across the app: Button, dropdowns with multi-select and portal support, pagination, radio cards, breadcrumbs, text fields and a date selector.
+- **Unit tests** with Vitest for the pagination bar and radio cards.
+
+![Login flows](/images/projects/legal-platform/login-flows.jpg)
+
+## The platform we built
+
+![Architecture diagram](/images/projects/legal-platform/architecture.jpg)
+
+As a team, the backend was designed around a few key ideas:
+
+- **Multi-tenant by design.** Every table carries the firm it belongs to, so one firm can never see another firm's data, and users who work for several firms switch between them safely.
+- **Strong sign-in.** JWT access and refresh tokens, a second step with OTP or an authenticator app, and Google and Microsoft single sign-on.
+- **Permissions on every route.** Each endpoint declares the permission it needs, and roles are configured per firm.
+- **Workflows that drive matters.** A matter follows a template of ordered stages. Tasks, events and documents can be linked to a stage, and each document can be marked visible to the client or firm-only.
+- **Work that runs in the background.** Bulk matter imports run on a Redis queue with a separate worker. Scheduled jobs send hearing reminders, flag overdue tasks and refresh court data.
+- **Real-time messaging** between clients and firms with Socket.IO, and documents stored in Azure Blob Storage.
+
+## What I learned
+
+- **Working in a large team** means reading more code than writing it, and keeping changes small and easy to review.
+- **Mobile isn't a smaller desktop.** The drag-and-drop bug only appeared on real touch devices, and the right fix was to change the behaviour, not to fight the library.
+- **Building against a real API** made me pay attention to loading, empty and error states, and to how permissions shape what each user can see.
